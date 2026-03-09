@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+coverage/
+
+# env
+.env
+.env.*
+!.env.example
+
+# editor
+.DS_Store
+.vscode/
+.idea/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# python cache
+__pycache__/
+*.pyc
+
+# prisma
+api/prisma/generated/

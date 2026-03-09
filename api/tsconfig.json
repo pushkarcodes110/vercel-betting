@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@betting/shared": ["../shared/src/index.ts"],
+      "@betting/shared/*": ["../shared/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "[[...route]].ts", "tests/**/*.ts"]
+}

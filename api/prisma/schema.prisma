@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CustomUser {
+  id          Int       @id @default(autoincrement())
+  password    String
+  last_login  DateTime?
+  is_superuser Boolean  @default(false)
+  username    String    @unique
+  first_name  String
+  last_name   String
+  email       String
+  is_staff    Boolean   @default(false)
+  is_active   Boolean   @default(true)
+  date_joined DateTime
+
+  bets         Bet[]              @relation("bet_user")
+  deleted_bets Bet[]              @relation("bet_deleted_by")
+  bulk_actions BulkBetAction[]    @relation("bulk_user")
+  undone_bulk_actions BulkBetAction[] @relation("bulk_undone_by")
+
+  @@map("userbaseapp_customuser")
+}
+
+model Bet {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  number        String
+  amount        Decimal   @db.Decimal(10, 2)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  bazar         String
+  bet_date      DateTime  @db.Date
+  bulk_action_id Int?
+  bet_type      String
+  column_number Int?
+  sub_type      String?
+  family_group  String?
+  input_digits  String?
+  search_digit  Int?
+  session_id    String?
+  status        String
+  notes         String?
+  is_deleted    Boolean   @default(false)
+  deleted_at    DateTime?
+  deleted_by_id Int?
+
+  user         CustomUser    @relation("bet_user", fields: [user_id], references: [id])
+  deleted_by   CustomUser?   @relation("bet_deleted_by", fields: [deleted_by_id], references: [id])
+  bulk_action  BulkBetAction? @relation(fields: [bulk_action_id], references: [id])
+
+  @@map("userbaseapp_bet")
+}
+
+model BulkBetAction {
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  action_type  String
+  amount       Decimal   @db.Decimal(10, 2)
+  total_bets   Int
+  total_amount Decimal   @default(0) @db.Decimal(10, 2)
+  bazar        String
+  action_date  DateTime  @db.Date
+  jodi_column  Int?
+  jodi_type    Int?
+  columns_used String?
+  family_group String?
+  family_numbers String?
+  input_data   String?
+  search_digit Int?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  status       String
+  is_undone    Boolean   @default(false)
+  undone_at    DateTime?
+  undone_by_id Int?
+  notes        String?
+  is_deleted   Boolean   @default(false)
+  deleted_at   DateTime?
+
+  user      CustomUser  @relation("bulk_user", fields: [user_id], references: [id])
+  undone_by CustomUser? @relation("bulk_undone_by", fields: [undone_by_id], references: [id])
+  bets      Bet[]
+
+  @@map("userbaseapp_bulkbetaction")
+}
